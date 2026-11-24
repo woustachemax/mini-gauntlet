@@ -90,8 +90,7 @@ def test_ec2_ssh_from_internet_fails_with_details():
     assert status is Status.FAIL
     assert "sg-1" in details
     assert "test-group" in details
-    assert "tcp 22" in details
-    assert "0.0.0.0/0" in details
+    assert details == "security group sg-1 (test-group): tcp 22 open to 0.0.0.0/0"
 
 
 def test_ec2_ssh_from_ipv6_internet_fails():
@@ -299,8 +298,13 @@ def test_nsg_ssh_from_anywhere_fails_with_details():
     assert status is Status.FAIL
     assert "nsg-1" in details
     assert "r1" in details
-    assert "22" in details
-    assert "from *" in details
+    assert details == "NSG nsg-1: rule r1 allows Tcp ports 22 from *"
+
+
+def test_nsg_range_details_name_the_covered_port():
+    status, details = run("AZ-NSG-01", nsg(nsg_rule(destination_ports="3380-3400")))
+    assert status is Status.FAIL
+    assert details == "NSG nsg-1: rule r1 allows Tcp ports 3380-3400 (covers 3389) from *"
 
 
 @pytest.mark.parametrize("source", ["*", "Internet", "INTERNET", "any", "Any", "0.0.0.0/0", "::/0"])

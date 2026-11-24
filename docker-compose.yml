@@ -1,0 +1,22 @@
+services:
+  api:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      INVENTORY_PATH: /inventory/inventory.json
+      DATABASE_PATH: /data/gauntlet.db
+    volumes:
+      - gauntlet-data:/data
+      - ./data/inventory.json:/inventory/inventory.json:ro
+
+  dashboard:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      api:
+        condition: service_healthy
+
+volumes:
+  gauntlet-data:

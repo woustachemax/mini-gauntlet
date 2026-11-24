@@ -59,12 +59,13 @@ def nsg_admin_ports(nsg, snapshot_time):
             continue
 
         exposed = sorted({port for low, high in ranges for port in admin_ports_in(low, high)})
-        if exposed:
-            covered = ", ".join(str(port) for port in exposed)
-            problems.append(
-                f"rule {rule.get('name')} allows {protocol} ports {ports} "
-                f"(covers {covered}) from {source}"
-            )
+        if not exposed:
+            continue
+        single_port = len(ranges) == 1 and ranges[0][0] == ranges[0][1]
+        covered = "" if single_port else f" (covers {', '.join(str(port) for port in exposed)})"
+        problems.append(
+            f"rule {rule.get('name')} allows {protocol} ports {ports}{covered} from {source}"
+        )
 
     if problems:
         return Status.FAIL, f"{label}: " + "; ".join(problems)

@@ -70,10 +70,11 @@ def security_group_admin_ports(group, snapshot_time):
         exposed = admin_ports_in(from_port, to_port) if protocol in TCP else []
         if all_traffic:
             ports = "all protocols and all ports"
+        elif exposed and from_port == to_port:
+            ports = f"tcp {from_port}"
         elif exposed:
             covered = ", ".join(str(port) for port in exposed)
-            port_range = str(from_port) if from_port == to_port else f"{from_port}-{to_port}"
-            ports = f"tcp {port_range} (covers {covered})"
+            ports = f"tcp {from_port}-{to_port} (covers {covered})"
         else:
             continue
         problems.append(f"{ports} open to {', '.join(sources)}")
