@@ -15,9 +15,11 @@ def admin_ports_in(low: int, high: int) -> list[int]:
 
 def parse_port_range(text) -> tuple[int, int]:
     text = str(text).strip()
-    low, _, high = text.partition("-")
+    low, separator, high = text.partition("-")
+    if not separator:
+        high = low
     try:
-        return int(low), int(high or low)
+        return int(low), int(high)
     except ValueError:
         raise ValueError(f"port {text!r} is not a number or a range") from None
 

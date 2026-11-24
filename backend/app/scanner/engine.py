@@ -37,7 +37,9 @@ def scan_account(account: dict, snapshot_time: datetime) -> list[Finding]:
     time.sleep(account.get("simulated_latency_ms", 0) / 1000)
     checks = checks_for(account.get("provider"))
     if not checks:
-        log.warning("account %r has unknown provider %r", account.get("account_id"), account.get("provider"))
+        log.warning(
+            "account %r has unknown provider %r", account.get("account_id"), account.get("provider")
+        )
     findings = []
     for check in checks:
         findings.extend(run_check(check, account, snapshot_time))
