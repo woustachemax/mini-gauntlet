@@ -34,7 +34,8 @@ def run_scan(snapshot: dict, account_ids: list[str] | None = None) -> list[Findi
 
 
 def scan_account(account: dict, snapshot_time: datetime) -> list[Finding]:
-    time.sleep(account.get("simulated_latency_ms", 0) / 1000)
+    scale = float(os.environ.get("SIMULATED_LATENCY_SCALE", "1"))
+    time.sleep(account.get("simulated_latency_ms", 0) / 1000 * scale)
     checks = checks_for(account.get("provider"))
     if not checks:
         log.warning(
@@ -74,7 +75,10 @@ def evaluate(check: Check, account: dict, resource, snapshot_time: datetime) -> 
     if status is Status.CANNOT_SCAN:
         log.warning(
             "%s on %r in account %r: %r",
-            check.check_id, finding.resource_id, finding.account_id, details,
+            check.check_id,
+            finding.resource_id,
+            finding.account_id,
+            details,
         )
     return finding
 
@@ -101,6 +105,10 @@ def make_finding(check: Check, account: dict, resource, status: Status, details:
 def score(findings: list[Finding]) -> float | None:
     passed = sum(1 for f in findings if f.status is Status.PASS)
     failed = sum(1 for f in findings if f.status is Status.FAIL)
+    return score_from_counts(passed, failed)
+
+
+def score_from_counts(passed: int, failed: int) -> float | None:
     if passed + failed == 0:
         return None
     return round(100 * passed / (passed + failed), 1)

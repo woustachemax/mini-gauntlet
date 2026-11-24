@@ -82,8 +82,10 @@ def test_check_that_raises_does_not_stop_the_scan(monkeypatch, caplog):
 
 
 def test_account_ids_filter():
-    accounts = [aws_account("aaa", {"s3_buckets": [GOOD_BUCKET]}),
-                aws_account("bbb", {"s3_buckets": [GOOD_BUCKET]})]
+    accounts = [
+        aws_account("aaa", {"s3_buckets": [GOOD_BUCKET]}),
+        aws_account("bbb", {"s3_buckets": [GOOD_BUCKET]}),
+    ]
     findings = run_scan(snapshot(*accounts), account_ids=["bbb"])
     assert [f.account_id for f in findings] == ["bbb"]
 
@@ -108,8 +110,12 @@ def test_score_is_none_without_pass_or_fail():
 
 
 def test_score_ignores_cannot_scan_and_rounds():
-    findings = [finding(Status.PASS), finding(Status.PASS), finding(Status.FAIL),
-                finding(Status.CANNOT_SCAN)]
+    findings = [
+        finding(Status.PASS),
+        finding(Status.PASS),
+        finding(Status.FAIL),
+        finding(Status.CANNOT_SCAN),
+    ]
     assert score(findings) == 66.7
 
 

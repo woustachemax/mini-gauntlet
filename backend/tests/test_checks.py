@@ -17,12 +17,21 @@ def run(check_id, resource):
 
 def test_all_ten_checks_are_registered():
     assert sorted(CHECKS) == [
-        "AWS-EC2-01", "AWS-IAM-01", "AWS-IAM-02", "AWS-RDS-01", "AWS-S3-01",
-        "AZ-NSG-01", "AZ-STG-01", "GCP-GCS-01", "GCP-GCS-02", "GCP-VPC-01",
+        "AWS-EC2-01",
+        "AWS-IAM-01",
+        "AWS-IAM-02",
+        "AWS-RDS-01",
+        "AWS-S3-01",
+        "AZ-NSG-01",
+        "AZ-STG-01",
+        "GCP-GCS-01",
+        "GCP-GCS-02",
+        "GCP-VPC-01",
     ]
 
 
 # AWS-S3-01
+
 
 def bucket(**flags):
     block = {
@@ -66,6 +75,7 @@ def test_s3_block_that_is_not_an_object_cannot_scan():
 
 
 # AWS-EC2-01
+
 
 def group(*rules):
     return {"group_id": "sg-1", "name": "test-group", "ingress": list(rules)}
@@ -154,6 +164,7 @@ def test_ec2_real_exposure_beats_an_unreadable_rule():
 
 # AWS-IAM-01
 
+
 def user(**fields):
     return {"user_name": "u1", "console_access": True, "mfa_enabled": True, **fields}
 
@@ -177,6 +188,7 @@ def test_iam_non_boolean_console_access_cannot_scan():
 
 
 # AWS-IAM-02
+
 
 def key(age, status="Active", key_id="key-1"):
     created = (SNAPSHOT - age).isoformat().replace("+00:00", "Z")
@@ -230,6 +242,7 @@ def test_iam_bad_created_at_cannot_scan():
 
 # AWS-RDS-01
 
+
 def test_rds_private_instance_passes():
     resource = {"db_instance_id": "db1", "publicly_accessible": False}
     assert run("AWS-RDS-01", resource)[0] is Status.PASS
@@ -245,6 +258,7 @@ def test_rds_missing_field_cannot_scan():
 
 
 # AZ-STG-01
+
 
 def test_storage_blocking_public_blobs_passes():
     resource = {"name": "st1", "allow_blob_public_access": False}
@@ -262,6 +276,7 @@ def test_storage_non_boolean_field_cannot_scan():
 
 
 # AZ-NSG-01
+
 
 def nsg(*rules):
     return {"name": "nsg-1", "rules": list(rules)}
@@ -306,8 +321,10 @@ def test_nsg_outbound_rule_passes():
     assert run("AZ-NSG-01", nsg(nsg_rule(direction="Outbound")))[0] is Status.PASS
 
 
-@pytest.mark.parametrize(("protocol", "expected"), [("Tcp", Status.FAIL), ("*", Status.FAIL),
-                                                     ("Udp", Status.PASS), ("Icmp", Status.PASS)])
+@pytest.mark.parametrize(
+    ("protocol", "expected"),
+    [("Tcp", Status.FAIL), ("*", Status.FAIL), ("Udp", Status.PASS), ("Icmp", Status.PASS)],
+)
 def test_nsg_protocols(protocol, expected):
     assert run("AZ-NSG-01", nsg(nsg_rule(protocol=protocol)))[0] is expected
 
@@ -338,6 +355,7 @@ def test_nsg_unreadable_ports_cannot_scan(ports):
 
 # GCP-GCS-01
 
+
 def gcs_bucket(*bindings, uniform=True):
     return {"name": "gb1", "uniform_bucket_level_access": uniform, "iam_bindings": list(bindings)}
 
@@ -365,6 +383,7 @@ def test_gcs_malformed_binding_cannot_scan():
 
 # GCP-GCS-02
 
+
 def test_gcs_uniform_access_on_passes():
     assert run("GCP-GCS-02", gcs_bucket(uniform=True))[0] is Status.PASS
 
@@ -378,6 +397,7 @@ def test_gcs_uniform_access_missing_cannot_scan():
 
 
 # GCP-VPC-01
+
 
 def firewall(**fields):
     defaults = {

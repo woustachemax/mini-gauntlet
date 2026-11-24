@@ -12,8 +12,12 @@ PUBLIC_MEMBERS = ("allUsers", "allAuthenticatedUsers")
 
 
 @check(
-    "GCP-GCS-01", "Bucket isn't public", Severity.HIGH,
-    "gcp", "gcs_buckets", "name",
+    "GCP-GCS-01",
+    "Bucket isn't public",
+    Severity.HIGH,
+    "gcp",
+    "gcs_buckets",
+    "name",
 )
 def bucket_not_public(bucket, snapshot_time):
     public = []
@@ -27,8 +31,12 @@ def bucket_not_public(bucket, snapshot_time):
 
 
 @check(
-    "GCP-GCS-02", "Bucket uses uniform bucket-level access", Severity.LOW,
-    "gcp", "gcs_buckets", "name",
+    "GCP-GCS-02",
+    "Bucket uses uniform bucket-level access",
+    Severity.LOW,
+    "gcp",
+    "gcs_buckets",
+    "name",
 )
 def bucket_uniform_access(bucket, snapshot_time):
     if not bool_field(bucket, "uniform_bucket_level_access"):
@@ -37,8 +45,12 @@ def bucket_uniform_access(bucket, snapshot_time):
 
 
 @check(
-    "GCP-VPC-01", "Firewall rule doesn't expose SSH or RDP to the internet", Severity.CRITICAL,
-    "gcp", "firewall_rules", "name",
+    "GCP-VPC-01",
+    "Firewall rule doesn't expose SSH or RDP to the internet",
+    Severity.CRITICAL,
+    "gcp",
+    "firewall_rules",
+    "name",
 )
 def firewall_admin_ports(rule, snapshot_time):
     label = f"firewall rule {rule.get('name')}"

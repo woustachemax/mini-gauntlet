@@ -14,8 +14,12 @@ def port_ranges(value) -> list[tuple[int, int]]:
 
 
 @check(
-    "AZ-STG-01", "Storage account blocks public blob access", Severity.HIGH,
-    "azure", "storage_accounts", "name",
+    "AZ-STG-01",
+    "Storage account blocks public blob access",
+    Severity.HIGH,
+    "azure",
+    "storage_accounts",
+    "name",
 )
 def storage_blocks_public_blobs(account, snapshot_time):
     if bool_field(account, "allow_blob_public_access"):
@@ -24,8 +28,12 @@ def storage_blocks_public_blobs(account, snapshot_time):
 
 
 @check(
-    "AZ-NSG-01", "NSG doesn't expose SSH or RDP to the internet", Severity.CRITICAL,
-    "azure", "network_security_groups", "name",
+    "AZ-NSG-01",
+    "NSG doesn't expose SSH or RDP to the internet",
+    Severity.CRITICAL,
+    "azure",
+    "network_security_groups",
+    "name",
 )
 def nsg_admin_ports(nsg, snapshot_time):
     label = f"NSG {nsg.get('name')}"

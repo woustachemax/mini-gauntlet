@@ -21,8 +21,12 @@ MAX_KEY_AGE = timedelta(days=90)
 
 
 @check(
-    "AWS-S3-01", "S3 bucket blocks public access", Severity.HIGH,
-    "aws", "s3_buckets", "name",
+    "AWS-S3-01",
+    "S3 bucket blocks public access",
+    Severity.HIGH,
+    "aws",
+    "s3_buckets",
+    "name",
 )
 def s3_blocks_public_access(bucket, snapshot_time):
     block = bucket.get("public_access_block")
@@ -37,8 +41,12 @@ def s3_blocks_public_access(bucket, snapshot_time):
 
 
 @check(
-    "AWS-EC2-01", "Security group doesn't expose SSH or RDP to the internet", Severity.CRITICAL,
-    "aws", "security_groups", "group_id",
+    "AWS-EC2-01",
+    "Security group doesn't expose SSH or RDP to the internet",
+    Severity.CRITICAL,
+    "aws",
+    "security_groups",
+    "group_id",
 )
 def security_group_admin_ports(group, snapshot_time):
     label = f"security group {group.get('group_id')} ({group.get('name')})"
@@ -78,8 +86,12 @@ def security_group_admin_ports(group, snapshot_time):
 
 
 @check(
-    "AWS-IAM-01", "Console users have MFA", Severity.HIGH,
-    "aws", "iam_users", "user_name",
+    "AWS-IAM-01",
+    "Console users have MFA",
+    Severity.HIGH,
+    "aws",
+    "iam_users",
+    "user_name",
 )
 def console_users_have_mfa(user, snapshot_time):
     if not bool_field(user, "console_access"):
@@ -90,8 +102,12 @@ def console_users_have_mfa(user, snapshot_time):
 
 
 @check(
-    "AWS-IAM-02", "No active access key is older than 90 days", Severity.MEDIUM,
-    "aws", "iam_users", "user_name",
+    "AWS-IAM-02",
+    "No active access key is older than 90 days",
+    Severity.MEDIUM,
+    "aws",
+    "iam_users",
+    "user_name",
 )
 def access_keys_not_old(user, snapshot_time):
     old = []
@@ -107,8 +123,12 @@ def access_keys_not_old(user, snapshot_time):
 
 
 @check(
-    "AWS-RDS-01", "RDS instance isn't publicly accessible", Severity.HIGH,
-    "aws", "rds_instances", "db_instance_id",
+    "AWS-RDS-01",
+    "RDS instance isn't publicly accessible",
+    Severity.HIGH,
+    "aws",
+    "rds_instances",
+    "db_instance_id",
 )
 def rds_not_public(instance, snapshot_time):
     if bool_field(instance, "publicly_accessible"):
