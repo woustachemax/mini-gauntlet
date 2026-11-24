@@ -1,0 +1,137 @@
+{
+  "snapshot_taken_at": "2026-10-01T00:00:00Z",
+  "accounts": [
+    {
+      "provider": "aws",
+      "account_id": "123456789012",
+      "name": "example-corp-prod",
+      "simulated_latency_ms": 1500,
+      "errors": {},
+      "resources": {
+        "s3_buckets": [
+          {"name": "example-corp-web-assets", "region": "us-east-1",
+           "public_access_block": {"block_public_acls": true, "ignore_public_acls": true, "block_public_policy": true, "restrict_public_buckets": true}},
+          {"name": "example-corp-public-downloads", "region": "us-east-1",
+           "public_access_block": {"block_public_acls": false, "ignore_public_acls": false, "block_public_policy": true, "restrict_public_buckets": true}},
+          {"name": "example-corp-logs", "region": "ap-south-1",
+           "public_access_block": null}
+        ],
+        "security_groups": [
+          {"group_id": "sg-0a1b2c3d4e5f60001", "name": "web-alb", "region": "us-east-1",
+           "ingress": [{"protocol": "tcp", "from_port": 443, "to_port": 443, "cidrs": ["0.0.0.0/0", "::/0"]}]},
+          {"group_id": "sg-0a1b2c3d4e5f60002", "name": "bastion", "region": "us-east-1",
+           "ingress": [{"protocol": "tcp", "from_port": 22, "to_port": 22, "cidrs": ["0.0.0.0/0"]}]},
+          {"group_id": "sg-0a1b2c3d4e5f60003", "name": "legacy-admin", "region": "ap-south-1",
+           "ingress": [{"protocol": "tcp", "from_port": 3000, "to_port": 3500, "cidrs": ["0.0.0.0/0"]}]},
+          {"group_id": "sg-0a1b2c3d4e5f60004", "name": "ipv6-ssh", "region": "ap-south-1",
+           "ingress": [{"protocol": "tcp", "from_port": 22, "to_port": 22, "cidrs": ["::/0"]}]},
+          {"group_id": "sg-0a1b2c3d4e5f60005", "name": "office-ssh", "region": "us-east-1",
+           "ingress": [{"protocol": "tcp", "from_port": 22, "to_port": 22, "cidrs": ["203.0.113.0/24"]}]},
+          {"group_id": "sg-0a1b2c3d4e5f60006", "name": "debug-all-traffic", "region": "us-east-1",
+           "ingress": [{"protocol": "-1", "from_port": null, "to_port": null, "cidrs": ["0.0.0.0/0"]}]},
+          {"group_id": "sg-0a1b2c3d4e5f60007", "name": "dns-resolver", "region": "us-east-1",
+           "ingress": [{"protocol": "udp", "from_port": 53, "to_port": 53, "cidrs": ["0.0.0.0/0"]}]}
+        ],
+        "iam_users": [
+          {"user_name": "alice", "console_access": true, "mfa_enabled": true,
+           "access_keys": [{"key_id": "example-key-0001", "status": "Active", "created_at": "2026-09-01T00:00:00Z"}]},
+          {"user_name": "bob", "console_access": true, "mfa_enabled": false,
+           "access_keys": []},
+          {"user_name": "ci-deployer", "console_access": false, "mfa_enabled": false,
+           "access_keys": [{"key_id": "example-key-0002", "status": "Active", "created_at": "2026-07-03T00:00:00Z"}]},
+          {"user_name": "reporting-bot", "console_access": false, "mfa_enabled": false,
+           "access_keys": [{"key_id": "example-key-0003", "status": "Active", "created_at": "2026-07-02T00:00:00Z"}]},
+          {"user_name": "legacy-etl", "console_access": false, "mfa_enabled": false,
+           "access_keys": [{"key_id": "example-key-0004", "status": "Active", "created_at": "2025-11-15T00:00:00Z"},
+                           {"key_id": "example-key-0005", "status": "Inactive", "created_at": "2024-01-10T00:00:00Z"}]},
+          {"user_name": "former-contractor", "console_access": false, "mfa_enabled": false,
+           "access_keys": [{"key_id": "example-key-0006", "status": "Inactive", "created_at": "2023-05-20T00:00:00Z"}]}
+        ],
+        "rds_instances": [
+          {"db_instance_id": "orders-db", "region": "us-east-1", "publicly_accessible": false},
+          {"db_instance_id": "analytics-replica", "region": "ap-south-1", "publicly_accessible": true}
+        ]
+      }
+    },
+    {
+      "provider": "aws",
+      "account_id": "210987654321",
+      "name": "example-corp-dev",
+      "simulated_latency_ms": 3000,
+      "errors": {"iam_users": "AccessDenied", "rds_instances": "UnauthorizedOperation"},
+      "resources": {
+        "s3_buckets": [
+          {"name": "example-corp-dev-artifacts", "region": "us-east-1",
+           "public_access_block": {"block_public_acls": true, "ignore_public_acls": true, "block_public_policy": true, "restrict_public_buckets": true}},
+          {"name": "example-corp-dev-scratch", "region": "us-west-2",
+           "public_access_block": {"block_public_acls": true, "ignore_public_acls": true, "block_public_policy": false, "restrict_public_buckets": false}}
+        ],
+        "security_groups": [
+          {"group_id": "sg-0b1c2d3e4f5a60001", "name": "dev-app", "region": "us-east-1",
+           "ingress": [{"protocol": "tcp", "from_port": 8080, "to_port": 8080, "cidrs": ["10.0.0.0/8"]}]},
+          {"group_id": "sg-0b1c2d3e4f5a60002", "name": "corrupt-record", "region": "us-east-1",
+           "ingress": [{"protocol": "tcp", "from_port": "twenty-two", "to_port": 22, "cidrs": ["0.0.0.0/0"]}]}
+        ]
+      }
+    },
+    {
+      "provider": "azure",
+      "account_id": "8f14e45f-ceea-4e7a-9d3b-2f6c1a0b7d21",
+      "name": "example-corp-azure",
+      "simulated_latency_ms": 1000,
+      "errors": {},
+      "resources": {
+        "storage_accounts": [
+          {"name": "examplecorpdata", "region": "centralindia", "allow_blob_public_access": false},
+          {"name": "examplecorppublic", "region": "centralindia", "allow_blob_public_access": true},
+          {"name": "examplecorpbackup", "region": "southindia", "allow_blob_public_access": false}
+        ],
+        "network_security_groups": [
+          {"name": "nsg-web", "region": "centralindia", "rules": [
+            {"name": "allow-https", "direction": "Inbound", "access": "Allow", "protocol": "Tcp", "source": "Internet", "destination_ports": "443"}]},
+          {"name": "nsg-jumpbox", "region": "centralindia", "rules": [
+            {"name": "allow-ssh", "direction": "Inbound", "access": "Allow", "protocol": "Tcp", "source": "*", "destination_ports": "22"}]},
+          {"name": "nsg-mgmt", "region": "southindia", "rules": [
+            {"name": "allow-mgmt-range", "direction": "Inbound", "access": "Allow", "protocol": "*", "source": "0.0.0.0/0", "destination_ports": "3380-3400"}]},
+          {"name": "nsg-locked", "region": "southindia", "rules": [
+            {"name": "deny-ssh-internet", "direction": "Inbound", "access": "Deny", "protocol": "Tcp", "source": "Internet", "destination_ports": "22"},
+            {"name": "allow-ssh-out", "direction": "Outbound", "access": "Allow", "protocol": "Tcp", "source": "*", "destination_ports": "22"}]}
+        ]
+      }
+    },
+    {
+      "provider": "gcp",
+      "account_id": "example-corp-gcp",
+      "name": "example-corp-gcp",
+      "simulated_latency_ms": 2500,
+      "errors": {},
+      "resources": {
+        "gcs_buckets": [
+          {"name": "example-corp-public-site", "region": "asia-south1", "uniform_bucket_level_access": true,
+           "iam_bindings": [{"role": "roles/storage.objectViewer", "members": ["allUsers"]}]},
+          {"name": "example-corp-ml-data", "region": "asia-south1", "uniform_bucket_level_access": false,
+           "iam_bindings": [{"role": "roles/storage.objectAdmin", "members": ["group:data-eng@example.com"]}]},
+          {"name": "example-corp-partner-share", "region": "us-central1", "uniform_bucket_level_access": true,
+           "iam_bindings": [{"role": "roles/storage.objectViewer", "members": ["allAuthenticatedUsers", "user:partner@example.com"]}]}
+        ],
+        "firewall_rules": [
+          {"name": "allow-ssh-from-iap", "region": "global", "direction": "INGRESS", "disabled": false,
+           "source_ranges": ["35.235.240.0/20"], "allowed": [{"IPProtocol": "tcp", "ports": ["22"]}],
+           "description": "SSH through Identity-Aware Proxy only"},
+          {"name": "allow-rdp-anywhere", "region": "global", "direction": "INGRESS", "disabled": false,
+           "source_ranges": ["0.0.0.0/0"], "allowed": [{"IPProtocol": "tcp", "ports": ["3389"]}],
+           "description": "<img src=x onerror=alert('untrusted-input')> temporary rule for vendor support"},
+          {"name": "allow-all-disabled", "region": "global", "direction": "INGRESS", "disabled": true,
+           "source_ranges": ["0.0.0.0/0"], "allowed": [{"IPProtocol": "all"}],
+           "description": "Disabled after incident review"},
+          {"name": "allow-app-ports", "region": "global", "direction": "INGRESS", "disabled": false,
+           "source_ranges": ["0.0.0.0/0"], "allowed": [{"IPProtocol": "tcp", "ports": ["8000-9000"]}],
+           "description": "Public app ports"},
+          {"name": "allow-ssh-egress", "region": "global", "direction": "EGRESS", "disabled": false,
+           "destination_ranges": ["0.0.0.0/0"], "allowed": [{"IPProtocol": "tcp", "ports": ["22"]}],
+           "description": "Outbound SSH to build hosts"}
+        ]
+      }
+    }
+  ]
+}
